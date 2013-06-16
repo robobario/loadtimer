@@ -1,0 +1,9 @@
+{
+    "language" : "javascript",
+    "views": {
+        "highestFiveMinAvg": {
+            "map": "function (doc, meta) {if(doc.fiveMinutely){for(var prop in doc.fiveMinutely){if(doc.fiveMinutely[prop].avg){emit(prop, {\"identifier\":doc.identifier,\"avg\":doc.fiveMinutely[prop].avg})}}}}",
+            "reduce": "function(key, values, rereduce) {function byAvg(a, b){return b.avg - a.avg;}var result = [];for(i=0; i < values.length; i++) {if(rereduce) {for(j=0; j < values[i].length; j++) {result.push(values[i][j])}} else {result.push(values[i]) }}result.sort(byAvg);return(result.slice(0,10));}"
+        }
+    }
+}

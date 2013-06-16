@@ -6,6 +6,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class LoadTimeStatistics {
 
+    private Double total = 0.0d;
+
     private Double avg = 0.0d;
 
     private Long count = 0L;
@@ -17,10 +19,11 @@ public class LoadTimeStatistics {
 
 
     @JsonCreator
-    public LoadTimeStatistics(@JsonProperty("avg") Double avg,@JsonProperty("count") Long count,@JsonProperty("max") Double max) {
+    public LoadTimeStatistics(@JsonProperty("avg") Double avg,@JsonProperty("count") Long count,@JsonProperty("max") Double max, @JsonProperty("total") Double total) {
         this.avg = avg;
         this.count = count;
         this.max = max;
+        this.total = total;
     }
 
 
@@ -44,6 +47,7 @@ public class LoadTimeStatistics {
             max = loadTime;
         }
         avg = ((avg * count) + loadTime)/(count + 1);
+        total += loadTime;
         count++;
     }
 
@@ -62,5 +66,10 @@ public class LoadTimeStatistics {
         } else{
             return false;
         }
+    }
+
+
+    public Double getTotal() {
+        return total;
     }
 }

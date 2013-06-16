@@ -18,7 +18,7 @@ public class PageLoadHistoryTestCase {
         DateTime now = new DateTime(2012, 1,2,5,7);
         id.recordLoadTime(5.0d, now);
         Map<String,LoadTimeStatistics> fiveMinutely = id.getFiveMinutely();
-        assertEquals(fiveMinutely, ImmutableMap.of("2012-01-02-05-05", new LoadTimeStatistics(5.0d, 1L, 5.0d)));
+        assertEquals(fiveMinutely, ImmutableMap.of("2012-01-02-05-05", new LoadTimeStatistics(5.0d, 1L, 5.0d,6.0d)));
     }
 
     @Test
@@ -30,7 +30,7 @@ public class PageLoadHistoryTestCase {
         String serialized = objectMapper.writer().writeValueAsString(id);
         PageLoadHistory p = objectMapper.reader(PageLoadHistory.class)
                 .readValue(serialized);
-        assertEquals(ImmutableMap.of("2012-01-02-05-05", new LoadTimeStatistics(5.0d, 1L, 5.0d)), p.getFiveMinutely());
+        assertEquals(ImmutableMap.of("2012-01-02-05-05", new LoadTimeStatistics(5.0d, 1L, 5.0d,6.0d)), p.getFiveMinutely());
         assertEquals("id", p.getIdentifier());;
     }
 
