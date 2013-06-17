@@ -2,20 +2,18 @@ package org.adscale.loadtimer.service.persistance;
 
 import static com.google.common.collect.ImmutableMap.of;
 
+import org.adscale.loadtimer.service.time.TimeBucketKeyMaker;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class PageLoadHistory {
-
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd-HH-mm");
 
     private final String identifier;
 
@@ -60,31 +58,31 @@ public class PageLoadHistory {
 
 
     private void updateMonthly(Double loadTime, DateTime eventTime) {
-        String bucketKey = getMonthlyBucketKey(eventTime);
+        String bucketKey = TimeBucketKeyMaker.getMonthlyBucketKey(eventTime);
         monthly = updateIntervalBuckets(loadTime, bucketKey, monthly);
     }
 
 
     private void updateWeekly(Double loadTime, DateTime eventTime) {
-        String bucketKey = getWeeklyBucketKey(eventTime);
+        String bucketKey = TimeBucketKeyMaker.getWeeklyBucketKey(eventTime);
         weekly = updateIntervalBuckets(loadTime, bucketKey, weekly);
     }
 
 
     private void updateDaily(Double loadTime, DateTime eventTime) {
-        String bucketKey = getDailyBucketKey(eventTime);
+        String bucketKey = TimeBucketKeyMaker.getDailyBucketKey(eventTime);
         daily = updateIntervalBuckets(loadTime, bucketKey, daily);
     }
 
 
     private void updateHourly(Double loadTime, DateTime now) {
-        String bucketKey = getHourlyBucketKey(now);
+        String bucketKey = TimeBucketKeyMaker.getHourlyBucketKey(now);
         hourly = updateIntervalBuckets(loadTime, bucketKey, hourly);
     }
 
 
     private void updateFiveMinutely(Double loadTime, DateTime now) {
-        String bucketKey = getFiveMinutelyBucketKey(now);
+        String bucketKey = TimeBucketKeyMaker.getFiveMinutelyBucketKey(now);
         fiveMinutely = updateIntervalBuckets(loadTime, bucketKey, fiveMinutely);
     }
 
@@ -106,37 +104,6 @@ public class PageLoadHistory {
             loadTimeStatistics = new LoadTimeStatistics();
         }
         return loadTimeStatistics;
-    }
-
-
-    private String getHourlyBucketKey(DateTime now) {
-        DateTime bucket = now.withMillisOfSecond(0).withSecondOfMinute(0).withMinuteOfHour(0);
-        return DATE_TIME_FORMATTER.print(bucket);
-    }
-
-
-    private String getMonthlyBucketKey(DateTime now) {
-        DateTime bucket = now.withMillisOfSecond(0).withSecondOfMinute(0).withMinuteOfHour(0).withHourOfDay(0).withDayOfMonth(1);
-        return DATE_TIME_FORMATTER.print(bucket);
-    }
-
-
-    private String getDailyBucketKey(DateTime now) {
-        DateTime bucket = now.withMillisOfSecond(0).withSecondOfMinute(0).withMinuteOfHour(0).withHourOfDay(0);
-        return DATE_TIME_FORMATTER.print(bucket);
-    }
-
-
-    private String getWeeklyBucketKey(DateTime now) {
-        DateTime bucket = now.withMillisOfSecond(0).withSecondOfMinute(0).withMinuteOfHour(0).withHourOfDay(0).withDayOfWeek(1);
-        return DATE_TIME_FORMATTER.print(bucket);
-    }
-
-
-    private String getFiveMinutelyBucketKey(DateTime now) {
-        DateTime bucket = now.withMillisOfSecond(0).withSecondOfMinute(0);
-        bucket = bucket.withMinuteOfHour(bucket.getMinuteOfHour() - bucket.getMinuteOfHour() % 5);
-        return DATE_TIME_FORMATTER.print(bucket);
     }
 
 

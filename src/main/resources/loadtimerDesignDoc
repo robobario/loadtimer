@@ -3,7 +3,27 @@
     "views": {
         "highestFiveMinAvg": {
             "map": "function (doc, meta) {if(doc.fiveMinutely){for(var prop in doc.fiveMinutely){if(doc.fiveMinutely[prop].avg){emit(prop, {\"identifier\":doc.identifier,\"avg\":doc.fiveMinutely[prop].avg})}}}}",
-            "reduce": "function(key, values, rereduce) {function byAvg(a, b){return b.avg - a.avg;}var result = [];for(i=0; i < values.length; i++) {if(rereduce) {for(j=0; j < values[i].length; j++) {result.push(values[i][j])}} else {result.push(values[i]) }}result.sort(byAvg);return(result.slice(0,10));}"
+            "reduce": "function(key, values, rereduce) {function byAvg(a, b){return b.avg - a.avg;}var result = [];for(i=0; i < values.length; i++) {if(rereduce) {for(j=0; j < values[i].length; j++) {result.push(values[i][j])}} else {result.push(values[i]) }}result.sort(byAvg);return(result.slice(0,20));}"
+        },
+
+        "highestHourly": {
+                    "map": "function (doc, meta) {if(doc.hourly){for(var prop in doc.hourly){if(doc.hourly[prop].avg){emit(prop, {\"identifier\":doc.identifier,\"avg\":doc.hourly[prop].avg})}}}}",
+                    "reduce": "function(key, values, rereduce) {function byAvg(a, b){return b.avg - a.avg;}var result = [];for(i=0; i < values.length; i++) {if(rereduce) {for(j=0; j < values[i].length; j++) {result.push(values[i][j])}} else {result.push(values[i]) }}result.sort(byAvg);return(result.slice(0,20));}"
+        },
+
+        "highestDaily": {
+                    "map": "function (doc, meta) {if(doc.daily){for(var prop in doc.daily){if(doc.daily[prop].avg){emit(prop, {\"identifier\":doc.identifier,\"avg\":doc.daily[prop].avg})}}}}",
+                    "reduce": "function(key, values, rereduce) {function byAvg(a, b){return b.avg - a.avg;}var result = [];for(i=0; i < values.length; i++) {if(rereduce) {for(j=0; j < values[i].length; j++) {result.push(values[i][j])}} else {result.push(values[i]) }}result.sort(byAvg);return(result.slice(0,20));}"
+        },
+
+        "highestWeekly": {
+                            "map": "function (doc, meta) {if(doc.weekly){for(var prop in doc.weekly){if(doc.weekly[prop].avg){emit(prop, {\"identifier\":doc.identifier,\"avg\":doc.weekly[prop].avg})}}}}",
+                            "reduce": "function(key, values, rereduce) {function byAvg(a, b){return b.avg - a.avg;}var result = [];for(i=0; i < values.length; i++) {if(rereduce) {for(j=0; j < values[i].length; j++) {result.push(values[i][j])}} else {result.push(values[i]) }}result.sort(byAvg);return(result.slice(0,20));}"
+        },
+
+        "highestMonthly": {
+                    "map": "function (doc, meta) {if(doc.monthly){for(var prop in doc.monthly){if(doc.monthly[prop].avg){emit(prop, {\"identifier\":doc.identifier,\"avg\":doc.monthly[prop].avg})}}}}",
+                    "reduce": "function(key, values, rereduce) {function byAvg(a, b){return b.avg - a.avg;}var result = [];for(i=0; i < values.length; i++) {if(rereduce) {for(j=0; j < values[i].length; j++) {result.push(values[i][j])}} else {result.push(values[i]) }}result.sort(byAvg);return(result.slice(0,20));}"
         }
     }
 }

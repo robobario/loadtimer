@@ -17,11 +17,13 @@ import com.google.common.collect.ImmutableList;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.IOException;
 import java.net.URI;
 
 @Configuration
+@EnableWebMvc
 public class Context {
 
     @Value("${AWS_SECRET_KEY}")
