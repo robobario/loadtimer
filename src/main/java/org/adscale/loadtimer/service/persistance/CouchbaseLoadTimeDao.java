@@ -107,11 +107,18 @@ public class CouchbaseLoadTimeDao implements LoadTimeDao, InitializingBean{
 
 
     @Override
-    public List<LoadAverage> topTwentyLastHour() throws IOException {
-        String thisHourKey = getHourlyBucketKey(DateTime.now());
+    public List<LoadAverage> topTwentyLastHour(DateTime now) throws IOException {
+        String thisHourKey = getHourlyBucketKey(now);
         ViewResponse response = getLoadAveragesForViewByBucket(thisHourKey, "highestHourly");
         return transformSingleRowLoadAveragesResult(response);
     }
+
+    @Override
+    public List<LoadAverage> topTwentyForHour(String bucketKey) throws IOException {
+        ViewResponse response = getLoadAveragesForViewByBucket(bucketKey, "highestHourly");
+        return transformSingleRowLoadAveragesResult(response);
+    }
+
 
 
     @Override
