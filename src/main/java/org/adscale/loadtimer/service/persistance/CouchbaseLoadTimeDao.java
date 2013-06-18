@@ -99,8 +99,8 @@ public class CouchbaseLoadTimeDao implements LoadTimeDao, InitializingBean{
 
 
     @Override
-    public List<LoadAverage> topTwentyLastFiveMinutes() throws IOException {
-        String thisFiveMinuteKey = getFiveMinutelyBucketKey(DateTime.now());
+    public List<LoadAverage> topTwentyLastFiveMinutes(DateTime now) throws IOException {
+        String thisFiveMinuteKey = getFiveMinutelyBucketKey(now);
         ViewResponse response = getLoadAveragesForViewByBucket(thisFiveMinuteKey, "highestFiveMinAvg");
         return transformSingleRowLoadAveragesResult(response);
     }
@@ -119,25 +119,51 @@ public class CouchbaseLoadTimeDao implements LoadTimeDao, InitializingBean{
         return transformSingleRowLoadAveragesResult(response);
     }
 
+    @Override
+    public List<LoadAverage> topTwentyForDay(String bucketKey) throws IOException {
+        ViewResponse response = getLoadAveragesForViewByBucket(bucketKey, "highestDaily");
+        return transformSingleRowLoadAveragesResult(response);
+    }
 
 
     @Override
-    public List<LoadAverage> topTwentyLastDay() throws IOException {
-        String currentDayKey = getDailyBucketKey(DateTime.now());
+    public List<LoadAverage> topTwentyForFiveMinute(String bucketKey) throws IOException {
+        ViewResponse response = getLoadAveragesForViewByBucket(bucketKey, "highestFiveMinAvg");
+        return transformSingleRowLoadAveragesResult(response);
+    }
+
+
+    @Override
+    public List<LoadAverage> topTwentyForWeek(String bucketKey) throws IOException {
+        ViewResponse response = getLoadAveragesForViewByBucket(bucketKey, "highestWeekly");
+        return transformSingleRowLoadAveragesResult(response);
+    }
+
+
+    @Override
+    public List<LoadAverage> topTwentyForMonth(String bucketKey) throws IOException {
+        ViewResponse response = getLoadAveragesForViewByBucket(bucketKey, "highestMonthly");
+        return transformSingleRowLoadAveragesResult(response);
+    }
+
+
+    @Override
+    public List<LoadAverage> topTwentyLastDay(DateTime now) throws IOException {
+        String currentDayKey = getDailyBucketKey(now);
         ViewResponse response = getLoadAveragesForViewByBucket(currentDayKey, "highestDaily");
         return transformSingleRowLoadAveragesResult(response);
     }
 
     @Override
-    public List<LoadAverage> topTwentyLastWeek() throws IOException {
-        String currentWeekKey = getWeeklyBucketKey(DateTime.now());
+    public List<LoadAverage> topTwentyLastWeek(DateTime now) throws IOException {
+        String currentWeekKey = getWeeklyBucketKey(now);
         ViewResponse response = getLoadAveragesForViewByBucket(currentWeekKey, "highestWeekly");
         return transformSingleRowLoadAveragesResult(response);
     }
 
     @Override
-    public List<LoadAverage> topTwentyLastMonth() throws IOException {
-        String currentMonthKey = getMonthlyBucketKey(DateTime.now());
+    public List<LoadAverage> topTwentyLastMonth(DateTime now) throws IOException {
+        String currentMonthKey = getMonthlyBucketKey(now);
         ViewResponse response = getLoadAveragesForViewByBucket(currentMonthKey, "highestMonthly");
         return transformSingleRowLoadAveragesResult(response);
     }

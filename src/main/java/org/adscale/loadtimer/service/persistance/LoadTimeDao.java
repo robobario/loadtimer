@@ -11,15 +11,18 @@ import java.util.concurrent.Future;
 public interface LoadTimeDao {
 
     Future<Map<String, PageLoadHistory>> get(Set<String> identifiers);
-
     Set<Future<Boolean>> putAll(Map<String, PageLoadHistory> historyMap);
 
-    List<LoadAverage> topTwentyLastFiveMinutes() throws IOException;
+    List<LoadAverage> topTwentyLastFiveMinutes(DateTime now) throws IOException;
     List<LoadAverage> topTwentyLastHour(DateTime now) throws IOException;
-    List<LoadAverage> topTwentyLastDay() throws IOException;
-    List<LoadAverage> topTwentyLastWeek() throws IOException;
-    List<LoadAverage> topTwentyLastMonth() throws IOException;
+    List<LoadAverage> topTwentyLastDay(DateTime now) throws IOException;
+    List<LoadAverage> topTwentyLastWeek(DateTime now) throws IOException;
+    List<LoadAverage> topTwentyLastMonth(DateTime now) throws IOException;
 
 
     List<LoadAverage> topTwentyForHour(String bucketKey) throws IOException;
+    List<LoadAverage> topTwentyForDay(String bucketKey) throws IOException;
+    List<LoadAverage> topTwentyForFiveMinute(String bucketKey) throws IOException;
+    List<LoadAverage> topTwentyForWeek(String bucketKey) throws IOException;
+    List<LoadAverage> topTwentyForMonth(String bucketKey) throws IOException;
 }

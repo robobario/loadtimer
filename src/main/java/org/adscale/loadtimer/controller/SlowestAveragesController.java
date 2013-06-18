@@ -1,11 +1,15 @@
 package org.adscale.loadtimer.controller;
 
+import static org.adscale.loadtimer.service.time.TimeBucketKeyMaker.getDailyBucketKey;
+import static org.adscale.loadtimer.service.time.TimeBucketKeyMaker.getFiveMinutelyBucketKey;
 import static org.adscale.loadtimer.service.time.TimeBucketKeyMaker.getHourlyBucketKey;
+import static org.adscale.loadtimer.service.time.TimeBucketKeyMaker.getMonthlyBucketKey;
 import static org.adscale.loadtimer.service.time.TimeBucketKeyMaker.getNextHourlyBucketKey;
 import static org.adscale.loadtimer.service.time.TimeBucketKeyMaker.getPreviousHourlyBucketKey;
+import static org.adscale.loadtimer.service.time.TimeBucketKeyMaker.getWeeklyBucketKey;
 
-import org.adscale.loadtimer.service.persistance.LoadAverage;
 import org.adscale.loadtimer.service.persistance.LoadTimeDao;
+import org.adscale.loadtimer.service.time.TimeBucketKeyMaker;
 
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Controller;
@@ -14,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -28,10 +31,14 @@ public class SlowestAveragesController {
 
 
     @RequestMapping("last-five-minutes")
-    public @ResponseBody List<LoadAverage> topTwentyLastFiveMinutes(HttpServletResponse response) {
+    public @ResponseBody AverageResponse topTwentyLastFiveMinutes(HttpServletResponse response) {
         try {
             addAcal(response);
-            return dao.topTwentyLastFiveMinutes();
+            DateTime now = DateTime.now();
+            String thisBucketKey = getFiveMinutelyBucketKey(now);
+            String previousHourlyBucketKey = TimeBucketKeyMaker.getPreviousFiveMinutelyBucketKey(now);
+            String nextHourlyBucketKey = TimeBucketKeyMaker.getNextFiveMinutelyBucketKey(now);
+            return new AverageResponse(dao.topTwentyLastFiveMinutes(now), thisBucketKey, previousHourlyBucketKey, nextHourlyBucketKey);
         }
         catch (IOException e) {
             throw new InternalServerErrorException(e);
@@ -54,10 +61,14 @@ public class SlowestAveragesController {
     }
 
     @RequestMapping("last-day")
-    public @ResponseBody List<LoadAverage> topTwentyLastDay(HttpServletResponse response) {
+    public @ResponseBody AverageResponse topTwentyLastDay(HttpServletResponse response) {
         try {
             addAcal(response);
-            return dao.topTwentyLastDay();
+            DateTime now = DateTime.now();
+            String thisBucketKey = getDailyBucketKey(now);
+            String previousHourlyBucketKey = TimeBucketKeyMaker.getPreviousDailyBucketKey(now);
+            String nextHourlyBucketKey = TimeBucketKeyMaker.getNextDailyBucketKey(now);
+            return new AverageResponse(dao.topTwentyLastDay(now), thisBucketKey, previousHourlyBucketKey, nextHourlyBucketKey);
         }
         catch (IOException e) {
             throw new InternalServerErrorException(e);
@@ -65,10 +76,14 @@ public class SlowestAveragesController {
     }
 
     @RequestMapping("last-week")
-    public @ResponseBody List<LoadAverage> topTwentyLastWeek(HttpServletResponse response) {
+    public @ResponseBody AverageResponse topTwentyLastWeek(HttpServletResponse response) {
         try {
             addAcal(response);
-            return dao.topTwentyLastWeek();
+            DateTime now = DateTime.now();
+            String thisBucketKey = getWeeklyBucketKey(now);
+            String previousBucketKey = TimeBucketKeyMaker.getPreviousWeeklyBucketKey(now);
+            String nextBucketKey = TimeBucketKeyMaker.getNextWeeklyBucketKey(now);
+            return new AverageResponse(dao.topTwentyLastWeek(now), thisBucketKey, previousBucketKey, nextBucketKey);
         }
         catch (IOException e) {
             throw new InternalServerErrorException(e);
@@ -77,10 +92,14 @@ public class SlowestAveragesController {
 
 
     @RequestMapping("last-month")
-    public @ResponseBody List<LoadAverage> topTwentyLastMonth(HttpServletResponse response) {
+    public @ResponseBody AverageResponse topTwentyLastMonth(HttpServletResponse response) {
         try {
             addAcal(response);
-            return dao.topTwentyLastMonth();
+            DateTime now = DateTime.now();
+            String thisBucketKey = getMonthlyBucketKey(now);
+            String previousBucketKey = TimeBucketKeyMaker.getPreviousMonthlyBucketKey(now);
+            String nextBucketKey = TimeBucketKeyMaker.getNextMonthlyBucketKey(now);
+            return new AverageResponse(dao.topTwentyLastMonth(now), thisBucketKey, previousBucketKey, nextBucketKey);
         }
         catch (IOException e) {
             throw new InternalServerErrorException(e);

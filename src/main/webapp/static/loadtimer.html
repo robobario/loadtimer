@@ -16,6 +16,8 @@
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="env well">
+            <select data-bind="options: periodSelectOptions, value: selectedPeriodOption">
+            </select>
             <h3 data-bind="text: averagesHeader()"></h3>
             <a data-bind="text: previousAveragesButtonLabel(), click:onPreviousClick" class="btn"></a>
             <a data-bind="text: nextAveragesButtonLabel(), click:onNextClick" class="btn"></a>
